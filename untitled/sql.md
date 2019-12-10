@@ -136,7 +136,7 @@ WHERE `total_sold` < 1
 GROUP BY `drink_id`;
 ```
 
-所以就要改用HVING接在最後面
+所以就要改用HAVING接在最後面
 
 ```sql
 SELECT `id`, COUNT(`amount`) AS `total_sold`
@@ -241,4 +241,19 @@ VALUE (3,2,9, '2019-07-14 14:26:12');
 INSERT INTO `orders` (`drink_id`,`customer_id`,`amount`,`created`)
 VALUE (3,1,2, '2019-07-14 18:51:50');
 ```
+
+{% hint style="info" %}
+下面這題當時有搞錯，要好好記錄一下。  
+Q.請問以下 SQL 語法所代表的意義為何？
+
+```sql
+SELECT `customer_id`, `drink_id`, MAX(`quantity`) 
+FROM orders 
+GROUP BY `customer_id`; 
+```
+
+A.找出所有有消費過的顧客中，每個顧客消費過最多杯的訂單是什麼，以及他們買了幾杯。
+
+如果不加上GROUP BY會發現它會篩選所有使用者中，購買數量最高的。
+{% endhint %}
 
