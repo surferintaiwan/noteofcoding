@@ -1,4 +1,4 @@
-# SQL
+# SQL基本指令
 
 ## ``CREATE TABLE `資料表名```
 
