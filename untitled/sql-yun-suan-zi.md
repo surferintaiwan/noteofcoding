@@ -20,9 +20,9 @@ FROM `dinrks`
 * `<=`
 
 ```sql
-SELECT `name`, `price`, (price) 
-WHERE `price` > 30
+SELECT `name`, `price` 
 FROM `dinrks`
+WHERE `price` > 30
 ```
 
 ## 邏輯運算子
@@ -36,14 +36,14 @@ FROM `dinrks`
 
 ```sql
 SELECT `name`, `price`
-WHERE `price` > 30 AND `price` < 40
 FROM `dinrks`
+WHERE `price` > 30 AND `price` < 40
 ```
 
 ```sql
 SELECT `name`, `price`
-WHERE `price` BETWEEN 30 AND 40
 FROM `dinrks`
+WHERE `price` BETWEEN 30 AND 40
 ```
 
 ## 關鍵字搜尋
@@ -56,7 +56,7 @@ FROM `dinrks`
 
 ```sql
 SELECT `name`, `price`
-WHERE `name` LIKE '%茶%'
 FROM `dinrks
+WHERE `name` LIKE '%茶%'
 ```
 
