@@ -73,7 +73,9 @@ SELECT * FROM `orders`
 WHERE `customer_id` = 2 
 ```
 
-## `可獨立存在指令`
+## `可獨立存在的搭配指令`
+
+這裡指的就是可以自己當一行的開頭的指令，但當然還是要先搭配CRUD這幾個指令在第一行。
 
 ### `WHERE`指定欄位
 
@@ -115,7 +117,7 @@ FROM `orders`
 GROUP BY `drink_id`
 ```
 
-## `不可獨立存在指令`
+## `不可獨立存在的搭配指令`
 
 這裡指的是必須接在SELECT之後的指令。
 
@@ -155,12 +157,13 @@ GROUP BY `drink_id`
 
 ## `Join` 多個資料表比對
 
-基本的公式大概是這樣
+基本的公式大概是這樣:
 
 ```sql
 SELECT A資料表.欄位名稱, B資料表.
-FROM 放左邊的那張表
-JOIN 放右邊的那張表
+FROM 放左邊的那張表 // 如果是同一張表自己比較，可以搭配AS產出新的表
+JOIN 放右邊的那張表 // 如果是同一張表自己比較，可以搭配AS產出新的表
+ON 兩張表的參照基準 //可以放> = <等等的比較運算子
 ```
 
 
@@ -227,6 +230,38 @@ ON `orders`.`drink_id` = `drinks`.`id`
 | \(null\) | \(null\) | \(null\) | \(null\) | \(null\) | 愛玉冰茶 | 30 |
 
 ### **SELF JOIN 以自己跟自己比對**
+
+就是同一張資料表自己跟自己比對，有兩種情境可以適用。
+
+**1. 把自己某一筆資料，跟自己其他資料比對帶入**  
+假設有張公司職員表，其中一欄叫做deputyid存放代理人的id，那要怎麼查詢某人的代理人名字是誰呢?  
+這時候就可以搭配`AS`把一張資料表變成兩張不同名稱的資料表，再回頭SELECT FROM JOIN ON，其實蠻怪的，AS寫在後面，但前面的SELECT竟然知道我新的兩張表是指誰。
+
+```sql
+SELECT t1.* , t2.name
+FROM emp AS  t1
+JOIN emp AS t2
+ON t1.deputyid = t2.id
+```
+
+**2. 以自己某一筆資料為基準，跟自己的其他資料比較**
+
+如果想知道我的飲料表裡面，比我阿華田便宜的飲料有哪些**?**  
+一樣透過AS把一張表變成兩張表**，**接著就會去比較t1價格中比t2價格還高的飲料有哪些，但我只想知道有哪些比阿華田便宜，所以最後再透過WHERE指定阿華田這個飲料。
+
+```sql
+SELECT t1.name, t2.name AS cheaper_name, t2.price 
+FROM `drinks` AS t1 
+JOIN `drinks` AS t2
+ON t1.price > t2.price
+WHERE t1.name = '阿華田'
+```
+
+| name | cheaper\_name | price |
+| :--- | :--- | :--- |
+| 阿華田 | 百香紅茶 | 45 |
+| 阿華田 | 四季春茶 | 30 |
+| 阿華田 | 愛玉冰茶 | 30 |
 
 ## 練習時間
 
