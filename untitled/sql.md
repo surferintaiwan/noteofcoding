@@ -1,6 +1,8 @@
 # SQL基本指令
 
-## `CREATE TABLE`建立資料表
+## `CRUD指令`
+
+### `CREATE TABLE`建立資料表
 
 ``CREATE TABLE `資料表名```
 
@@ -16,7 +18,7 @@ CREATE TABLE `drinks` (
 );
 ```
 
-## `INSERT INTO`新增資料
+### `INSERT INTO`新增資料
 
 ``INSERT INTO `資料表名` (`欄位名`) + VALUE(`對應值`)``
 
@@ -25,7 +27,7 @@ INSERT INTO `drinks` (`name`,`price`,`cost`)
 VALUE ('阿華田',65,20);
 ```
 
-## `UPDATE`更新資料
+### `UPDATE`更新資料
 
 ``UPDATE `資料表名` SET `欄位名` = 新的值``
 
@@ -37,7 +39,7 @@ SET `price` = 90
 WHERE `name` = '冰咖啡';
 ```
 
-## `DELETE FROM`刪除資料
+### `DELETE FROM`刪除資料
 
 ``DELETE FROM `資料表名` + WHERE `欄位名` = 對應值``
 
@@ -48,7 +50,7 @@ DELETE FROM `drinks`
 WHERE `name` = '冰咖啡';
 ```
 
-## `SELECT * FROM`查詢資料
+### `SELECT * FROM`查詢資料
 
 ``SELECT * FROM `資料表名` + WHERE `欄位名` = 對應值``
 
@@ -71,61 +73,21 @@ SELECT * FROM `orders`
 WHERE `customer_id` = 2 
 ```
 
-## `WHERE`指定欄位
+## `可獨立存在指令`
+
+### `WHERE`指定欄位
 
 ``WHERE `欄位名` = '對應值'``
 
 可以在更新資料、查詢資料時使用。
 
-## `ORDER BY`排序
+### `ORDER BY`排序
 
 ``ORDER BY `欄位名` ASC``
 
 可以進行資料排序，或是``ORDER BY `欄未名`　DESC``
 
-## `AVG`平均
-
-```sql
-SELECT AVG(`price`) AS `avg_price`
-FROM `drinks`
-WHERE `price` > 10;
-```
-
-## `SUM`加總
-
-```sql
-SELECT SUM(`price`) AS `sum_price`
-FROM `drinks`
-WHERE `price` > 10;
-```
-
-## `GROUP BY`分組
-
-```sql
-SELECT `id` ,SUM(`amount`) AS `total_sold`
-FROM `orders`
-GROUP BY `drink_id`
-```
-
-## `COUNT計算次數`
-
-以下面為例，SELECT \`id\`就是說我要鎖定id去做出現次數的計算，接著程式會去找看各個id，amount裡面有值的就算+1，  
-相對地，若是`COUNT`選了一個裡面沒有值的欄位來計算，那就會發現算出來的值跟自己想的不一樣。  
-所以使用的時候要注意，到底是要COUNT什麼欄位?
-
-| id | total\_sold |
-| :--- | :--- |
-| 1 | 1 |
-| 2 | 1 |
-| 3 | 2 |
-
-```sql
-SELECT `id`, COUNT(`amount`) AS `total_sold`
-FROM `orders`
-GROUP BY `drink_id`
-```
-
-## `HAVING`篩選函式計算的值
+### `HAVING`篩選函式計算的值
 
 延續前面，如果我想要找出total\_sold大於1的資料，直覺上會使用`WHERE`去做篩選，但會出現錯誤，因為WHERE只讀得原本資料表裡已經有的欄位，像在計算時產生的新欄位它就沒辦法辨識。
 
@@ -144,6 +106,127 @@ FROM `orders`
 GROUP BY `drink_id`
 HAVING `total_sold` > 1
 ```
+
+## `GROUP BY`分組
+
+```sql
+SELECT `id` ,SUM(`amount`) AS `total_sold`
+FROM `orders`
+GROUP BY `drink_id`
+```
+
+## `不可獨立存在指令`
+
+這裡指的是必須接在SELECT之後的指令。
+
+### `AVG`平均
+
+```sql
+SELECT AVG(`price`) AS `avg_price`
+FROM `drinks`
+WHERE `price` > 10;
+```
+
+### `SUM`加總
+
+```sql
+SELECT SUM(`price`) AS `sum_price`
+FROM `drinks`
+WHERE `price` > 10;
+```
+
+### `COUNT計算次數`
+
+以下面為例，SELECT \`id\`就是說我要鎖定id去做出現次數的計算，接著程式會去找看各個id，amount裡面有值的就算+1，  
+相對地，若是`COUNT`選了一個裡面沒有值的欄位來計算，那就會發現算出來的值跟自己想的不一樣。  
+所以使用的時候要注意，到底是要COUNT什麼欄位?
+
+| id | total\_sold |
+| :--- | :--- |
+| 1 | 1 |
+| 2 | 1 |
+| 3 | 2 |
+
+```sql
+SELECT `id`, COUNT(`amount`) AS `total_sold`
+FROM `orders`
+GROUP BY `drink_id`
+```
+
+## `Join` 多個資料表比對
+
+基本的公式大概是這樣
+
+```sql
+SELECT A資料表.欄位名稱, B資料表.
+FROM 放左邊的那張表
+JOIN 放右邊的那張表
+```
+
+
+
+### INNER Join 兩邊互相都要有
+
+![](https://assets-lighthouse.s3.amazonaws.com/uploads/image/file/7726/ExportedContentImage_02.png)
+
+```sql
+SELECT `orders`.*, `drinks`.`name`, `drinks`.`price` 
+FROM `orders` 
+JOIN `drinks`
+ON `orders`.`drink_id` = `drinks`.`id`
+```
+
+FROM的資料表就是左邊T1的意思，JOIN的資料表就是右邊T2的意思，但因為是你有我也有的狀況，所以FROM跟JOIN顛倒過來寫也是一樣意思的。
+
+```sql
+SELECT `orders`.*, `drinks`.`name`, `drinks`.`price` 
+FROM `drinks` 
+JOIN `drinks`
+ON `orders`.`drink_id` = `drinks`.`id`
+```
+
+### **LEFT JOIN 只有左邊有**
+
+\*\*\*\*
+
+![](https://assets-lighthouse.s3.amazonaws.com/uploads/image/file/7728/ExportedContentImage_04.png)
+
+```sql
+SELECT `orders`.*, `drinks`.`name`, `drinks`.`price` 
+FROM `drinks` 
+RIGHT JOIN `orders`
+ON `orders`.`drink_id` = `drinks`.`id`
+```
+
+| id | drink\_id | customer\_id | amount | created | name | price |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| 1 | 1 | 2 | 4 | 2019-07-14T13:55:56Z | 阿華田 | 65 |
+| 2 | 2 | 2 | 3 | 2019-07-14T14:21:23Z | 百香紅茶 | 45 |
+| 3 | 3 | 2 | 9 | 2019-07-14T14:26:12Z | 四季春茶 | 30 |
+| 4 | 3 | 1 | 2 | 2019-07-14T18:51:50Z | 四季春茶 | 30 |
+
+### **RIGHT JOIN 只有右邊有**
+
+\*\*\*\*
+
+![](https://assets-lighthouse.s3.amazonaws.com/uploads/image/file/7729/ExportedContentImage_05.png)
+
+```sql
+SELECT `orders`.*, `drinks`.`name`, `drinks`.`price` 
+FROM `orders` 
+RIGHT JOIN `drinks`
+ON `orders`.`drink_id` = `drinks`.`id`
+```
+
+| id | drink\_id | customer\_id | amount | created | name | price |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| 1 | 1 | 2 | 4 | 2019-07-14T13:55:56Z | 阿華田 | 65 |
+| 2 | 2 | 2 | 3 | 2019-07-14T14:21:23Z | 百香紅茶 | 45 |
+| 3 | 3 | 2 | 9 | 2019-07-14T14:26:12Z | 四季春茶 | 30 |
+| 4 | 3 | 1 | 2 | 2019-07-14T18:51:50Z | 四季春茶 | 30 |
+| \(null\) | \(null\) | \(null\) | \(null\) | \(null\) | 愛玉冰茶 | 30 |
+
+### **SELF JOIN 以自己跟自己比對**
 
 ## 練習時間
 
