@@ -375,3 +375,30 @@ A.找出所有有消費過的顧客中，每個顧客消費過最多杯的訂單
 如果不加上GROUP BY會發現它會篩選所有使用者中，購買數量最高的。
 {% endhint %}
 
+is null
+
+LIKE \(%o\_\_o%\)
+
+concat
+
+replace
+
+[https://sqlzoo.net/wiki/SELECT\_from\_WORLD\_Tutorial](https://sqlzoo.net/wiki/SELECT_from_WORLD_Tutorial)
+
+XOR
+
+LEFT  
+LENGTH
+
+{% embed url="https://sqlzoo.net/wiki/SELECT\_from\_Nobel\_Tutorial" %}
+
+如果字串裡面有'，就要改用''
+
+```sql
+SELECT *
+FROM nobel
+WHERE winner = 'EUGENE O''NEILL'
+```
+
+DISTINCT
+
